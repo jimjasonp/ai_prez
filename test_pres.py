@@ -42,7 +42,7 @@ X_test = scaler.transform(X_test)
 
 from sklearn.linear_model import LinearRegression
 lr = LinearRegression()
-lr.fit(X_fft,y)
+#lr.fit(X_fft,y)
 
 from feature_vector_dokimes import X_dokimes,X_fft_dokimes
 from y_dokimes import damage_data_df
@@ -71,11 +71,12 @@ lasso = Lasso(alpha=0.000000002,
 
 from sklearn.linear_model import ElasticNet
 
-en = ElasticNet(alpha=0.000000002,
+en = ElasticNet(alpha=0.000000005,
                 l1_ratio=0.2,  
                 max_iter=1000000,  
-                tol=0.0000001,  
-                selection='cyclic')
+                #tol=0.0000001,  
+                selection='cyclic'
+                )
 en.fit(X,y)
 
 
@@ -85,7 +86,9 @@ from sklearn.model_selection import cross_val_predict,LeaveOneOut,cross_val_scor
 X = X_fft_dokimes
 y = damage_data_df
 y_pred = en.predict(X)
-#y_pred = cross_val_predict(lr,X,y,cv=LeaveOneOut())
-#print(mean_absolute_percentage_error(y,y_pred))
-#print(mean_absolute_error(y,y_pred))
+y_true = [0.2,0.034,0.062,0.086,0.012]
+print('mape is')
+print(mean_absolute_percentage_error(y_true,y_pred))
+print('mae is')
+print(mean_absolute_error(y_true,y_pred))
 print(y_pred)
