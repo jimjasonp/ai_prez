@@ -120,13 +120,13 @@ sensor2_vector = []
 sensor3_vector = []
 sensor4_vector = []
 
-for i in range(0,5): #(0,5) (0,151)
+for i in range(0,5) : #(0,5) (0,151)
     sensor2_vector.append(power_spectrum_list[i])
 
 for i in range(5,10) : #(5,10) (151,302)
     sensor3_vector.append(power_spectrum_list[i])
 
-for i in range(10,15):#(10,15) (302,453)
+for i in range(10,15) :#(10,15) (302,453)
     sensor4_vector.append(power_spectrum_list[i])
 
 sensor2_fft_vector = []
@@ -136,7 +136,7 @@ sensor4_fft_vector = []
 for i in range(0,5):#(0,5) (0,151)
     sensor2_fft_vector.append(power_spectrum_fft_list[i])
 
-for i in range(5,10):#(5,10) (151,302)
+for i in range(5,10) :#(5,10) (151,302)
     sensor3_fft_vector.append(power_spectrum_fft_list[i])
 
 for i in range(10,15):#(10,15) (302,453)

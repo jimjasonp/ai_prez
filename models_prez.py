@@ -14,12 +14,9 @@ from feature_vector import X,X_fft
 X = X_fft #X,X_fft,sensor_mean
 y = y_set_creator('Damage_percentage','regression')
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,shuffle=True)
-
 
 scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
+X= scaler.fit_transform(X)
 
 
 ################ PCA ################
@@ -48,17 +45,10 @@ plt.title('Scree Plot')
 
 ################################################
 
-X = pca.components_[0]
-#X = pd.DataFrame({'pc1':pca.components_[0]})
+#X = pca.components_[0]
+#X = pd.DataFrame({'pc1':pca.components_[0],'pc2':pca.components_[1],'pc3':pca.components_[2]})
 
-print(X.shape)
 ############ kalw diafora montela############
-
-
-from sklearn.linear_model import LinearRegression
-lr = LinearRegression()
-lr.fit(X_fft,y)
-
 
 from sklearn.linear_model import Lasso
 
@@ -69,25 +59,19 @@ lasso = Lasso(alpha=0.000000002,
               )
 #lasso.fit(X,y)
 
-from sklearn.linear_model import ElasticNet
+from sklearn.linear_model import ElasticNetCV
 
-en = ElasticNet(alpha=0.000000005,
-                l1_ratio=0.2,  
+en = ElasticNetCV(
+                cv= 100,
+                eps=1e-3,
+                l1_ratio=0.99,  
                 max_iter=1000000,  
-                #tol=0.0000001,  
+                tol=0.000001,  
                 selection='cyclic'
                 )
-#en.fit(X,y)
+en.fit(X,y)
 
-from sklearn.linear_model import Ridge
 
-rr = Ridge(
-        alpha=0.000000005,   
-        max_iter=1000000, 
-        tol=0.0000001, 
-        solver='auto',  
-        )
-#rr.fit(X,y)
 ################################################
 
 
@@ -98,11 +82,16 @@ from feature_vector_dokimes_sample_rek import X_dokimes,X_fft_dokimes
 from y_dokimes import damage_data_df
 
 X = X_fft_dokimes
+X = scaler.fit_transform(X)
 
-y_pred = lr.predict(X)
+
+
+
+y_pred = en.predict(X)
 print(y_pred)
 
-y_true = [0.02,0.034,0.062,0.086,0.12]
+y_true = [0.02,0.034,0.062,0.086,0.1
+          ]
 
 
 print('mape is')
