@@ -45,11 +45,11 @@ y = y_set_creator('Damage_percentage','regression')
 scaler = StandardScaler()
 X_train= scaler.fit_transform(X_train)
 
-X_train, X_drop, y, y_drop = train_test_split(X_train, y, test_size=0.4,shuffle=True)
+X_train, X_drop, y, y_drop = train_test_split(X_train, y, test_size=0.01,shuffle=True)
 
 X_train = pd.DataFrame(X_train)
 
-
+'''
 #################   RFECV   ##########################
 
 from sklearn.feature_selection import RFE
@@ -86,7 +86,7 @@ plt.xlabel('Principal Component')
 plt.title('Scree Plot')
 #plt.show()
 ################################################
-
+'''
 
 
 
@@ -124,12 +124,11 @@ X_test = pd.DataFrame({
 #X_test = X_dokimes
 
 X_test = scaler.transform(X_test)
-#X_test = pca.transform(X_test)
 X_test = pd.DataFrame(X_test)
 
-rfe.transform(X_test)
+#rfe.transform(X_test)
 X_test = pd.DataFrame({'feature1':X_test[4],'feature2':X_test[11],'feature3':X_test[10]})
-
+#X_test = pca.transform(X_test)
 
 
 
@@ -153,7 +152,7 @@ encv = ElasticNetCV(
                 tol=1e-6,  
                 selection='cyclic'
                 )
-encv.fit(X_train,y)
+#encv.fit(X_train,y)
 
 from sklearn.linear_model import ElasticNet
 
@@ -170,11 +169,43 @@ en = ElasticNet(
 from sklearn.linear_model import LinearRegression
 
 lr = LinearRegression()
-lr.fit(X_train,y)
+#lr.fit(X_train,y)
+
+
+import tensorflow as tf
+
+from tensorflow import keras
+
+from keras.models import Sequential
+
+from keras.layers import Flatten,Dense
+
+print(X_train)
+
+
+model = Sequential([
+    # Flatten input from 28x28 images to 784 (28*28) vector
+    Flatten(input_shape=(148, 3)),
+  
+    # Dense layer 1 (256 neurons)
+    Dense(256, activation='sigmoid'),  
+  
+    # Dense layer 2 (128 neurons)
+    Dense(128, activation='sigmoid'), 
+  
+    # Output layer (10 classes)
+    Dense(10, activation='sigmoid'),  
+
+    Dense(1, activation='sigmoid'), 
+])
+
+model.compile(loss="mean_squared_error", optimizer="sgd")
+
+history = model.fit(X_train, y, epochs=20)
 
 ################################################
 
-y_pred = encv.predict(X_test)
+y_pred = model.predict(X_test)
 print(y_pred)
 
 y_true = [0.02,0.034,0.062,0.086,0.12
