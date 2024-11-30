@@ -4,8 +4,8 @@ import glob
 import os
 import numpy as np
 import statistics
-path = r'C:\Users\jimja\Desktop\thesis\Balanced_Data'
-#path = r'C:\Users\jimja\Desktop\thesis\dokimes' # use your path
+#path = r'C:\Users\jimja\Desktop\thesis\Balanced_Data'
+path = r'C:\Users\jimja\Desktop\thesis\dokimes' # use your path
 # to sensor data list einai auto pou einai sth morfh gia train
 sensor_data_list = []
 name_list = []
