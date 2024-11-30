@@ -3,7 +3,8 @@ from sklearn.metrics import mean_absolute_percentage_error,mean_absolute_error
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 ##### kanw train me to original dataset
@@ -44,16 +45,35 @@ y = y_set_creator('Damage_percentage','regression')
 scaler = StandardScaler()
 X_train= scaler.fit_transform(X_train)
 
-X_train, X_drop, y, y_drop = train_test_split(X_train, y, test_size=0.2,shuffle=True)
+X_train, X_drop, y, y_drop = train_test_split(X_train, y, test_size=0.4,shuffle=True)
+
+X_train = pd.DataFrame(X_train)
+
+
+#################   RFECV   ##########################
+
+from sklearn.feature_selection import RFE
+from sklearn.tree import DecisionTreeRegressor
+rfe = RFE(estimator=DecisionTreeRegressor(), n_features_to_select = 3 )
+rfe.fit(X_train,y)
+#for i,col in zip(range(X_train.shape[1]), X_train.columns):
+#    print(f"{col} selected = {rfe.support_[i]} rank = {rfe.ranking_[i]}")
+
+
+X_train = pd.DataFrame({'feature1':X_train[4],'feature2':X_train[11],'feature3':X_train[10]})
+
+
+###############################################
+
+
+
 
 #################     PCA     #####################
 from sklearn.decomposition import PCA
-import numpy as np
-import matplotlib.pyplot as plt
 
 pca = PCA(n_components=0.7, random_state = 42)
 pca.fit(X_train)
-X_train = pca.transform(X_train)
+#X_train = pca.transform(X_train)
 X_train = pd.DataFrame(X_train)
 
 #The following code constructs the Scree plot
@@ -66,6 +86,9 @@ plt.xlabel('Principal Component')
 plt.title('Scree Plot')
 #plt.show()
 ################################################
+
+
+
 
 
 
@@ -101,7 +124,13 @@ X_test = pd.DataFrame({
 #X_test = X_dokimes
 
 X_test = scaler.transform(X_test)
-X_test = pca.transform(X_test)
+#X_test = pca.transform(X_test)
+X_test = pd.DataFrame(X_test)
+
+rfe.transform(X_test)
+X_test = pd.DataFrame({'feature1':X_test[4],'feature2':X_test[11],'feature3':X_test[10]})
+
+
 
 
 ############ kalw diafora montela############
