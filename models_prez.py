@@ -41,7 +41,6 @@ X_train = pd.DataFrame({
 #X_train = X #X,X_fft,sensor_mean
 y = y_set_creator('Damage_percentage','regression')
 
-
 scaler = StandardScaler()
 X_train= scaler.fit_transform(X_train)
 
@@ -49,7 +48,6 @@ X_train, X_drop, y, y_drop = train_test_split(X_train, y, test_size=0.01,shuffle
 
 X_train = pd.DataFrame(X_train)
 
-'''
 #################   RFECV   ##########################
 
 from sklearn.feature_selection import RFE
@@ -67,7 +65,7 @@ X_train = pd.DataFrame({'feature1':X_train[4],'feature2':X_train[11],'feature3':
 
 
 
-
+'''
 #################     PCA     #####################
 from sklearn.decomposition import PCA
 
@@ -126,7 +124,7 @@ X_test = pd.DataFrame({
 X_test = scaler.transform(X_test)
 X_test = pd.DataFrame(X_test)
 
-#rfe.transform(X_test)
+rfe.transform(X_test)
 X_test = pd.DataFrame({'feature1':X_test[4],'feature2':X_test[11],'feature3':X_test[10]})
 #X_test = pca.transform(X_test)
 
@@ -171,7 +169,17 @@ from sklearn.linear_model import LinearRegression
 lr = LinearRegression()
 #lr.fit(X_train,y)
 
+from sklearn.linear_model import Ridge
+rr = Ridge(
+        alpha=0.000000005,   
+        max_iter=1000000, 
+        tol=0.0000001, 
+        solver='auto',  
+        )
+rr.fit(X_train,y)
 
+
+'''
 import tensorflow as tf
 
 from tensorflow import keras
@@ -179,8 +187,6 @@ from tensorflow import keras
 from keras.models import Sequential
 
 from keras.layers import Flatten,Dense
-
-print(X_train)
 
 
 model = Sequential([
@@ -204,8 +210,9 @@ model.compile(loss="mean_squared_error", optimizer="sgd")
 history = model.fit(X_train, y, epochs=20)
 
 ################################################
+'''
 
-y_pred = model.predict(X_test)
+y_pred = rr.predict(X_test)
 print(y_pred)
 
 y_true = [0.02,0.034,0.062,0.086,0.12
