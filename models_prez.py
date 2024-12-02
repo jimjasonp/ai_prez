@@ -51,15 +51,16 @@ size = 0.1
 X_train_1, X_drop, y_1, y_drop = train_test_split(X_train_1, y_1, test_size=size,shuffle=True)
 
 
-print(len(X_train_1),len(y_1))
 
 X_train_2 = X_set(r'C:\Users\jimja\Desktop\thesis\random_data')[0]
 y_2 = y_set('Damage_percentage',r'C:\Users\jimja\Desktop\thesis\random_data','regression')
-print(len(X_train_2),len(y_2))
+
 
 X_train = np.concatenate((X_train_1,X_train_2),axis=0)
 y = np.concatenate((y_1,y_2),axis=0)
-print(len(X_train),len(y))
+
+
+print(len(X_train))
 
 
 
@@ -198,7 +199,7 @@ lr.fit(X_train,y)
 
 from sklearn.linear_model import Ridge
 rr = Ridge(
-    alpha=0.03,   
+    alpha=1,   
     max_iter=1000000, 
     tol=0.0000001, 
     solver='auto',  
@@ -247,7 +248,7 @@ def model_run(model):
     y_true = [0.02,0.034,0.062,0.086,0.12]
     mape = mean_absolute_percentage_error(y_true,y_pred)
     mae = mean_absolute_error(y_true,y_pred)
-    return mae,mape
+    return mae,mape,y_true,y_pred
 
 
 # creating the dataset
@@ -268,4 +269,12 @@ samples = len(X_train)
 plt.xlabel("Models")
 plt.ylabel("Mean absolute Percentage error")
 plt.title(f"Mean absolute percentage error of models with number of samples used = {samples}")
+plt.show()
+
+plt.plot(model_run(lr)[2],marker = 'o')
+plt.plot(model_run(lr)[3],linestyle='dashed',marker = 'o')
+plt.xlabel("sample")
+plt.ylabel("y value")
+plt.title(f"Comparison of predicted and y test for each datapoint using Linear Regression")
+plt.legend(["y_test", "y_pred"], loc="lower right")
 plt.show()
