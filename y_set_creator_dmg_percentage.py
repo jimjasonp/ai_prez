@@ -11,7 +11,7 @@ name_list = []
 damage_results_list = ['Damage_percentage', 'DamageLayer1', 'DamageLayer2', 'DamageLayer3', 'DamageLayer4', 'DamageLayer5']
 
 
-def y_set_creator(damage_result,mode):
+def y_set_creator(damage_result,path,mode):
 
     damage_result = str(damage_result)
     # gia kathe file name sto path pou exw dwsei afairei to .csv kai afairei nan values kai kanei mia lista mono me to damage percentage
