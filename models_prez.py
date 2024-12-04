@@ -125,7 +125,7 @@ pca = PCA(n_components=0.7, random_state = 42)
 
 from feature_vector_dokimes_sample_rek import X_dokimes,X_fft_dokimes,sensor_stdev,sensor_mean,sensor_max,sensor_median_high
 from y_dokimes import damage_data_df
-
+#X_test = X_dokimes
 '''
 X_test = pd.DataFrame({
 's2_mean':sensor_mean['s2'],
@@ -145,9 +145,7 @@ X_test = pd.DataFrame({
 's4_stdev':sensor_stdev['s4'],
 })
 '''
-
-X_test = X_dokimes
-
+X_test = X_set(r'C:\Users\jimja\Desktop\thesis\dokimes')[0]
 X_test = scaler.transform(X_test)
 X_test = pd.DataFrame(X_test)
 
