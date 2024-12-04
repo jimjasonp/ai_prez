@@ -45,7 +45,7 @@ from test_file_opener import y_set,X_set
 X_train_1 = X_set(r'C:\Users\jimja\Desktop\thesis\data')[0]
 y_1 = y_set('Damage_percentage',r'C:\Users\jimja\Desktop\thesis\data','regression')
 
-size = 0.9
+size = 0.5
 
 
 X_train_1, X_drop, y_1, y_drop = train_test_split(X_train_1, y_1, test_size=size,shuffle=True)
@@ -58,7 +58,6 @@ y_2 = y_set('Damage_percentage',r'C:\Users\jimja\Desktop\thesis\random_data','re
 
 X_train = np.concatenate((X_train_1,X_train_2),axis=0)
 y = np.concatenate((y_1,y_2),axis=0)
-
 
 print(len(X_train))
 
@@ -159,6 +158,16 @@ X_test = pd.DataFrame(X_test)
 
 
 ############ kalw diafora montela############
+from sklearn.ensemble import RandomForestRegressor
+rf = RandomForestRegressor()
+rf.fit(X_train,y)
+
+from sklearn.tree import DecisionTreeRegressor
+dt = DecisionTreeRegressor()
+dt.fit(X_train,y)
+
+
+
 from sklearn.linear_model import Lasso
 
 lasso = Lasso(alpha=0.000000002,
@@ -206,7 +215,7 @@ rr = Ridge(
     )
 rr.fit(X_train,y)
 
-'''
+
 import tensorflow as tf
 
 from tensorflow import keras
@@ -216,28 +225,32 @@ from keras.models import Sequential
 from keras.layers import Flatten,Dense
 
 
-model = Sequential()
+mlp = Sequential()
 # Flatten input from 28x28 images to 784 (28*28) vector
-#model.add(Flatten(input_shape=(None, 2250)))
+#mlp.add(Flatten(input_shape=(None, 2250)))
 
 # Dense layer 1 (256 neurons)
-model.add(Dense(256, activation='sigmoid'))
+mlp.add(Dense(256, activation='sigmoid'))
 
 # Dense layer 2 (128 neurons)
-model.add(Dense(128, activation='sigmoid'))
+mlp.add(Dense(128, activation='sigmoid'))
 
+
+mlp.add(Dense(64, activation='sigmoid'))
+
+#mlp.add(Dense(32, activation='sigmoid'))
 # Output layer (10 classes)
-model.add(Dense(10, activation='sigmoid'))
+mlp.add(Dense(10, activation='sigmoid'))
 
-model.add(Dense(1, activation='linear'))
+mlp.add(Dense(1, activation='linear'))
 
 
-model.compile(loss="mean_squared_error", optimizer="sgd")
+mlp.compile(loss="mean_absolute_error", optimizer="adam")
 
-history = model.fit(X_train, y, epochs=15)
+history = mlp.fit(X_train, y, epochs=150)
 
 ################################################
-'''
+
 
 model_list = [ en, lr, rr]
 
@@ -251,10 +264,14 @@ def model_run(model):
     return mae,mape,y_true,y_pred
 
 
-# creating the dataset
+# creating the dataset 
+
+######### good models ################
 data = {'Linear Regression':model_run(lr)[1], 
         'Ridge':model_run(rr)[1],
-        'Elastic Net':model_run(en)[1]}
+        'Elastic Net':model_run(en)[1],
+        
+        }
 
 model_names  = list(data.keys())
 mape = list(data.values())
@@ -270,11 +287,34 @@ plt.xlabel("Models")
 plt.ylabel("Mean absolute Percentage error")
 plt.title(f"Mean absolute percentage error of models with number of samples used = {samples}")
 plt.show()
+################################################
+data = {'MLP':model_run(mlp)[1], 
+        'Decision Trees':model_run(dt)[1],
+        'Random Forest':model_run(rf)[1]
+        }
 
+model_names  = list(data.keys())
+mape = list(data.values())
+
+fig = plt.figure(figsize = (10, 5))
+
+# creating the bar plot
+plt.bar(model_names, mape, color ='maroon', 
+        width = 0.4)
+
+samples = len(X_train)
+plt.xlabel("Models")
+plt.ylabel("Mean absolute Percentage error")
+plt.title(f"Mean absolute percentage error of models with number of samples used = {samples}")
+plt.show()
+################  bad models  ################
+
+
+################################################
 plt.plot(model_run(lr)[2],marker = 'o')
 plt.plot(model_run(lr)[3],linestyle='dashed',marker = 'o')
 plt.xlabel("sample")
 plt.ylabel("y value")
 plt.title(f" Predicted and true value of samples using Linear Regression")
 plt.legend(["y_test", "y_pred"], loc="lower right")
-plt.show()
+#plt.show()

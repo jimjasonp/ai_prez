@@ -1,21 +1,17 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-X = ['Linear Regression','Elastic Net','Ridge Regression'] 
+X = ['Linear Regression','Elastic Net','Ridge Regression', 'MLP'] 
 
-lr = [9.2 ,  6.3, 8.1 ] 
-en = [15.9 , 16.2, 13.7] 
-rr = [9.0 , 6.1 , 7.9]
-
-min = [9.2 , 15.9, 9.0]
-mid = [6.3 , 16.2, 6.1]
-max = [8.1 , 13.7, 7.9]
+min = [9.2 , 15.0, 9.0, 16.0]
+mid = [6.3 , 16.2, 6.1, 10.2]
+max = [8.5 , 13.7, 8, 14.0]
 
 X_axis = np.arange(len(X)) 
 
-plt.bar(X_axis - 0.25, min, 0.2, label = '57 training samples') 
-plt.bar(X_axis , mid, 0.2, label = '117 training samples') 
-plt.bar(X_axis + 0.25 , max, 0.2, label = '177 training samples') 
+plt.bar(X_axis - 0.25, min, 0.2, label = '90 training samples') 
+plt.bar(X_axis , mid, 0.2, label = '150 training samples') 
+plt.bar(X_axis + 0.25 , max, 0.2, label = '210 training samples') 
   
 plt.xticks(X_axis, X) 
 plt.xlabel("Models")
