@@ -45,7 +45,7 @@ from test_file_opener import y_set,X_set
 X_train_1 = X_set(r'C:\Users\jimja\Desktop\thesis\data')[0]
 y_1 = y_set('Damage_percentage',r'C:\Users\jimja\Desktop\thesis\data','regression')
 
-size = 0.1
+size = 0.9
 
 
 X_train_1, X_drop, y_1, y_drop = train_test_split(X_train_1, y_1, test_size=size,shuffle=True)
@@ -244,7 +244,7 @@ model_list = [ en, lr, rr]
 def model_run(model):
 
     y_pred = model.predict(X_test)
-    print(y_pred)
+    #print(y_pred)
     y_true = [0.02,0.034,0.062,0.086,0.12]
     mape = mean_absolute_percentage_error(y_true,y_pred)
     mae = mean_absolute_error(y_true,y_pred)
@@ -275,6 +275,6 @@ plt.plot(model_run(lr)[2],marker = 'o')
 plt.plot(model_run(lr)[3],linestyle='dashed',marker = 'o')
 plt.xlabel("sample")
 plt.ylabel("y value")
-plt.title(f"Comparison of predicted and y test for each datapoint using Linear Regression")
+plt.title(f" Predicted and true value of samples using Linear Regression")
 plt.legend(["y_test", "y_pred"], loc="lower right")
 plt.show()
