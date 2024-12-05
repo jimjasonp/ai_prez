@@ -42,22 +42,26 @@ X_train = pd.DataFrame({
 
 from test_file_opener import y_set,X_set
 
-X_train_1 = X_set(r'C:\Users\jimja\Desktop\thesis\data')[0]
-y_1 = y_set('Damage_percentage',r'C:\Users\jimja\Desktop\thesis\data','regression')
+#X_train_1 = X_set(r'C:\Users\jimja\Desktop\thesis\data')[0]
+#y_1 = y_set('Damage_percentage',r'C:\Users\jimja\Desktop\thesis\data','regression')
 
-size = 0.5
-
-
-X_train_1, X_drop, y_1, y_drop = train_test_split(X_train_1, y_1, test_size=size,shuffle=True)
+#size = 0.5
 
 
-
-X_train_2 = X_set(r'C:\Users\jimja\Desktop\thesis\random_data')[0]
-y_2 = y_set('Damage_percentage',r'C:\Users\jimja\Desktop\thesis\random_data','regression')
+#X_train_1, X_drop, y_1, y_drop = train_test_split(X_train_1, y_1, test_size=size,shuffle=True)
 
 
-X_train = np.concatenate((X_train_1,X_train_2),axis=0)
-y = np.concatenate((y_1,y_2),axis=0)
+
+#X_train_2 = X_set(r'C:\Users\jimja\Desktop\thesis\random_data')[0]
+#y_2 = y_set('Damage_percentage',r'C:\Users\jimja\Desktop\thesis\random_data','regression')
+
+
+#X_train = np.concatenate((X_train_1,X_train_2),axis=0)
+#y = np.concatenate((y_1,y_2),axis=0)
+
+X_train = X_set(r'C:\Users\jimja\Desktop\thesis\random_data')[0]
+y = y_set('Damage_percentage',r'C:\Users\jimja\Desktop\thesis\random_data','regression')
+
 
 print(len(X_train))
 
@@ -80,9 +84,9 @@ X_train= scaler.fit_transform(X_train)
 #rfe.fit(X_train,y)
 #for i,col in zip(range(X_train.shape[1]), X_train.columns):
 #    print(f"{col} selected = {rfe.support_[i]} rank = {rfe.ranking_[i]}")
-
-
 #X_train = pd.DataFrame({'feature1':X_train[4],'feature2':X_train[10],'feature3':X_train[1]})
+#rfe.transform(X_test)
+#X_test = pd.DataFrame({'feature1':X_test[4],'feature2':X_test[10],'feature3':X_test[1]})
 ###############################################
 
 
@@ -93,7 +97,7 @@ pca = PCA(n_components=0.7, random_state = 42)
 #pca.fit(X_train)
 #X_train = pca.transform(X_train)
 #X_train = pd.DataFrame(X_train)
-
+#X_test = pca.transform(X_test)
 #The following code constructs the Scree plot
 #per_var = np.round(pca.explained_variance_ratio_* 100, decimals=1)
 #labels = ['PC' + str(x) for x in range(1, len(per_var)+1)]
@@ -106,16 +110,6 @@ pca = PCA(n_components=0.7, random_state = 42)
 ################################################
 
 
-
-#fig = plt.figure(figsize=(12, 12))
-#ax = fig.add_subplot(projection='3d')
-
-#sequence_containing_x_vals = X_train[0]
-#sequence_containing_y_vals = X_train[1]
-#sequence_containing_z_vals = X_train[2]
-
-#ax.scatter(sequence_containing_x_vals, sequence_containing_y_vals, sequence_containing_z_vals)
-#plt.show()
 
 
 
@@ -149,9 +143,8 @@ X_test = X_set(r'C:\Users\jimja\Desktop\thesis\dokimes')[0]
 X_test = scaler.transform(X_test)
 X_test = pd.DataFrame(X_test)
 
-#rfe.transform(X_test)
-#X_test = pd.DataFrame({'feature1':X_test[4],'feature2':X_test[10],'feature3':X_test[1]})
-#X_test = pca.transform(X_test)
+
+
 
 
 
@@ -257,6 +250,7 @@ def model_run(model):
     y_pred = model.predict(X_test)
     #print(y_pred)
     y_true = [0.02,0.034,0.062,0.086,0.12]
+    #y_true = y_set('Damage_percentage',r'C:\Users\jimja\Desktop\thesis\dokimes','regression')
     mape = mean_absolute_percentage_error(y_true,y_pred)
     mae = mean_absolute_error(y_true,y_pred)
     return mae,mape,y_true,y_pred
