@@ -35,16 +35,16 @@ def res_plot(model_list,min,mid,max,name_list):
 
     plt.bar(X_axis - 0.25, min, 0.2, label = '75 training samples')
     
-    for index, value in enumerate(min):
-        plt.text(value, index,str(value))
+    #for index, value in enumerate(min):
+    #    plt.text(value, index,str(value))
     
     plt.bar(X_axis , mid, 0.2, label = '112 training samples')
-    for index, value in enumerate(mid):
-        plt.text(value, index,str(value))
+    #for index, value in enumerate(mid):
+    #    plt.text(value, index,str(value))
     
     plt.bar(X_axis + 0.25 , max, 0.2, label = '225 training samples')
-    for index, value in enumerate(max):
-        plt.text(value, index,str(value))
+    #for index, value in enumerate(max):
+    #    plt.text(value, index,str(value))
     
     plt.xticks(X_axis, name_list)
     plt.xlabel("Models")

@@ -1,29 +1,38 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler,MinMaxScaler
 import numpy as np
 
 from test_file_opener import y_set,X_set
 from models import *
 from helper_functions import res_plot,model_run
 
-X_data = X_set(r'C:\Users\jimja\Desktop\thesis\data')[0]
+# transformations fourier,none,wavelet,psd,pwelch
+transformation = 'fourier'
+
+X_data = X_set(r'C:\Users\jimja\Desktop\thesis\data',transformation)
 y_data = y_set(r'C:\Users\jimja\Desktop\thesis\data')
 
 
-X_random_data = X_set(r'C:\Users\jimja\Desktop\thesis\random_data')[0]
+X_random_data = X_set(r'C:\Users\jimja\Desktop\thesis\random_data',transformation)
 y_random_data = y_set(r'C:\Users\jimja\Desktop\thesis\random_data')
 
-X_dokimes = X_set(r'C:\Users\jimja\Desktop\thesis\dokimes')[0]
+X_dokimes = X_set(r'C:\Users\jimja\Desktop\thesis\dokimes',transformation)
 
-scaler = StandardScaler()
+
+#scaler = StandardScaler()
+scaler = MinMaxScaler()
 X_random_data= scaler.fit_transform(X_random_data)
 X_data = scaler.transform(X_data)
 X_dokimes = scaler.transform(X_dokimes)
 X_dokimes = pd.DataFrame(X_dokimes)
 
-model_list = [mlp,elastic_net,linear_regression,ridge_reg,random_forest_reg]
-name_list = ['mlp','elastic net','linear regression','ridge regression','random forest']
+model_list = [mlp,
+              #elastic_net,
+              linear_regression,ridge_reg,random_forest_reg]
+name_list = ['mlp',
+             #'elastic net',
+             'linear regression','ridge regression','random forest']
 
 
 max = [] # kai ta duo sets einai full

@@ -18,7 +18,19 @@ def fourier(sample_sensor):
     power_spectrum = np.abs(fourier)
     return power_spectrum
 
-def X_set(path):
+
+def psd():
+    print('psd')
+
+
+def pwelch():
+    print('pwelch')
+
+    
+def wavelet():
+    print('wavelet')
+
+def X_set(path,transformation):
     sensor_data_list = []
     name_list = []
 
@@ -55,22 +67,23 @@ def X_set(path):
         sensor_data_list.append(df)
 
 
-
-#gia kathe feature kataskeuazo ena dataframe pou tha mpoun gia kathe sensora oi times tou feature gia kathe timeserie tou sensora
-
     power_spectrum_list = []
-    power_spectrum_fft_list = []
-    # h diadikasia ginetai epanalhptika gia kathe feature sto feature list
     sensor_names = ['s2','s3','s4']
     for sensor in sensor_names:
-        #gia kathe sample sensora dld gia kathe xronoseira (pou prokuptei apo to shma pou lambanei o sensoras efarmozo fft
+        #gia kathe sample sensora dld gia kathe xronoseira (pou prokuptei apo to shma pou lambanei o sensoras efarmozo transformations
         for i in range(0,len(sensor_data_list)):
-            #efarmozo to metasxhmatismo fourier (fft) se kathe timeserie
             sample_sensor =sensor_data_list[i][sensor]
-            power_spectrum = sample_sensor
-            power_spectrum_list.append(power_spectrum)
-            power_spectrum_fft = fourier(sample_sensor)
-            power_spectrum_fft_list.append(power_spectrum_fft)  
+            if transformation == 'fourier':
+                power_spectrum = fourier(sample_sensor)
+            elif transformation == 'psd':
+                power_spectrum = fourier(sample_sensor)
+            elif transformation == 'pwelch':
+                power_spectrum = fourier(sample_sensor)
+            elif transformation == 'wavelet':
+                power_spectrum = fourier(sample_sensor)
+            elif transformation == 'none':
+                power_spectrum = fourier(sample_sensor)
+            power_spectrum_list.append(power_spectrum)  
 
 
     sensor2_vector = []
@@ -91,26 +104,8 @@ def X_set(path):
     for i in range(bound_2,bound_3):
         sensor4_vector.append(power_spectrum_list[i])
 
-    sensor2_fft_vector = []
-    sensor3_fft_vector = []
-    sensor4_fft_vector = []
-
-    for i in range(0,bound_1):
-        sensor2_fft_vector.append(power_spectrum_fft_list[i])
-
-    for i in range(bound_1,bound_2):
-        sensor3_fft_vector.append(power_spectrum_fft_list[i])
-
-    for i in range(bound_2,bound_3):
-        sensor4_fft_vector.append(power_spectrum_fft_list[i])
-
-
-    X_time = np.concatenate((sensor2_vector,sensor3_vector,sensor4_vector),axis=1)
-    X_fft = np.concatenate((sensor2_fft_vector,sensor3_fft_vector,sensor4_fft_vector),axis=1)
-    return X_time,X_fft
-
-
-
+    X = np.concatenate((sensor2_vector,sensor3_vector,sensor4_vector),axis=1)
+    return X
 
 
 def y_set(path):

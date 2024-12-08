@@ -25,6 +25,22 @@ def lasso_reg(X_train,y,X_test):
     y_pred = lasso.predict(X_test)
     return y_pred
 
+def svr(X_train,y,X_test):
+    from sklearn.svm import SVR
+    svr = SVR()
+    svr.fit(X_train,y)
+    y_pred = svr.predict(X_test)
+    return y_pred
+
+
+def gpr(X_train,y,X_test):
+    from sklearn.gaussian_process import GaussianProcessRegressor
+    gpr = GaussianProcessRegressor()
+    gpr.fit(X_train,y)
+    y_pred = gpr.predict(X_test)
+    return y_pred
+
+
 
 def elastic_net_cv(X_train,y,X_test):
     from sklearn.linear_model import ElasticNetCV
