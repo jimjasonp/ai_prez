@@ -16,7 +16,7 @@ y = np.concatenate((
 X_test = X_set(r'C:\Users\jimja\Desktop\thesis\dokimes','none')
 sample = X_train[0]
 
-def welch(sample):
+def pwelch(sample):
     fs = 1000
     (f, S)= signal.welch(sample, fs, nperseg=512)
 
@@ -33,10 +33,10 @@ def psd(sample):
     (f, S) = signal.periodogram(sample, fs, scaling='density')
 
     plt.semilogy(f, S)
-    #plt.ylim([1e-7, 1e2])
-    plt.xlim([0,1000])
+    plt.ylim([1e-14, 1e-3])
+    plt.xlim([0,500])
     plt.xlabel('frequency [Hz]')
     plt.ylabel('PSD [V**2/Hz]')
     plt.show()
 
-welch(sample)
+psd(sample)

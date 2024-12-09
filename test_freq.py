@@ -4,30 +4,26 @@ from helper_functions import res_plot,model_run
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
-
+from sklearn.preprocessing import normalize
 # transformations fourier,none,wavelet,psd,pwelch
 transformation = 'fourier'
 
-X_data = X_set(r'C:\Users\jimja\Desktop\thesis\data',transformation)
-y_data = y_set(r'C:\Users\jimja\Desktop\thesis\data')
 
 
 X_random_data = X_set(r'C:\Users\jimja\Desktop\thesis\random_data',transformation)
-y_random_data = y_set(r'C:\Users\jimja\Desktop\thesis\random_data')
 
-X_dokimes = X_set(r'C:\Users\jimja\Desktop\thesis\dokimes',transformation)
+X_random_data = X_random_data[0]
+freq = range(0,len(X_random_data))
 
-
+df = pd.DataFrame({'magnitude':X_random_data,'freq':freq})
 #scaler = StandardScaler()
+
 scaler = MinMaxScaler()
-X_random_data= scaler.fit_transform(X_random_data)
-X_data = scaler.transform(X_data)
-X_dokimes = scaler.transform(X_dokimes)
-X_dokimes = pd.DataFrame(X_dokimes)
+df = scaler.fit_transform(df)
+print(df)
 
-
-plt.plot(X_random_data)
-#plt.yscale('log')
-plt.xlim(0,350)
+plt.plot(df)
+plt.yscale('log')
+plt.xlim(0,1024)
 plt.grid(True)
 plt.show()

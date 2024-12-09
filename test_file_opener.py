@@ -1,4 +1,4 @@
-
+from scipy import signal
 import pandas as pd
 import glob
 import os
@@ -19,12 +19,28 @@ def fourier(sample_sensor):
     return power_spectrum
 
 
-def psd():
-    print('psd')
+def pwelch(sample_sensor):
+    fs = 1000
+    (f, S)= signal.welch(sample_sensor, fs, nperseg=512)
+    return S
+    #plt.semilogy(f, S)
+    #plt.xlim([0, 500])
+    #plt.xlabel('frequency [Hz]')
+    #plt.ylabel('PSD [V**2/Hz]')
+    #plt.show()
 
-
-def pwelch():
-    print('pwelch')
+def psd(sample_sensor):
+    fs = 1000
+    # f contains the frequency components
+    # S is the PSD
+    (f, S) = signal.periodogram(sample_sensor, fs, scaling='density')
+    return S
+    #plt.semilogy(f, S)
+    #plt.ylim([1e-14, 1e-3])
+    #plt.xlim([0,500])
+    #plt.xlabel('frequency [Hz]')
+    #plt.ylabel('PSD [V**2/Hz]')
+    #plt.show()
 
     
 def wavelet():
@@ -76,11 +92,11 @@ def X_set(path,transformation):
             if transformation == 'fourier':
                 power_spectrum = fourier(sample_sensor)
             elif transformation == 'psd':
-                power_spectrum = fourier(sample_sensor)
+                power_spectrum = psd(sample_sensor)
             elif transformation == 'pwelch':
-                power_spectrum = fourier(sample_sensor)
+                power_spectrum = pwelch(sample_sensor)
             elif transformation == 'wavelet':
-                power_spectrum = fourier(sample_sensor)
+                power_spectrum = wavelet(sample_sensor)
             elif transformation == 'none':
                 power_spectrum = fourier(sample_sensor)
             power_spectrum_list.append(power_spectrum)  
