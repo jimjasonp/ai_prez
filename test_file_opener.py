@@ -1,50 +1,16 @@
-from scipy import signal
+
 import pandas as pd
 import glob
 import os
 import numpy as np
 import statistics
-path = r'C:\Users\jimja\Desktop\thesis\data'
+from helper_functions import pwelch,psd,fourier,wavelet,spectrogram,signal_data
+
+#path = r'C:\Users\jimja\Desktop\thesis\data'
 #path = r'C:\Users\jimja\Desktop\thesis\data' # use your path
 # to sensor data list einai auto pou einai sth morfh gia train
 
-def fourier(sample_sensor):
-    fs = 1/1000
-    #the sampling frequency is 1/(seconds in a total experiment time)
 
-    fourier = np.fft.fft(sample_sensor)
-    #sample sensor is the value of s2 which is the 
-    freqs = np.fft.fftfreq(sample_sensor.size,d=fs)
-    power_spectrum = np.abs(fourier)
-    return power_spectrum
-
-
-def pwelch(sample_sensor):
-    fs = 1000
-    (f, S)= signal.welch(sample_sensor, fs, nperseg=512)
-    return S
-    #plt.semilogy(f, S)
-    #plt.xlim([0, 500])
-    #plt.xlabel('frequency [Hz]')
-    #plt.ylabel('PSD [V**2/Hz]')
-    #plt.show()
-
-def psd(sample_sensor):
-    fs = 1000
-    # f contains the frequency components
-    # S is the PSD
-    (f, S) = signal.periodogram(sample_sensor, fs, scaling='density')
-    return S
-    #plt.semilogy(f, S)
-    #plt.ylim([1e-14, 1e-3])
-    #plt.xlim([0,500])
-    #plt.xlabel('frequency [Hz]')
-    #plt.ylabel('PSD [V**2/Hz]')
-    #plt.show()
-
-    
-def wavelet():
-    print('wavelet')
 
 def X_set(path,transformation):
     sensor_data_list = []
@@ -82,7 +48,7 @@ def X_set(path,transformation):
         df = pd.read_csv(filename,sep=' |,', engine='python').dropna()
         sensor_data_list.append(df)
 
-
+    signal_properties_list =[]
     power_spectrum_list = []
     sensor_names = ['s2','s3','s4']
     for sensor in sensor_names:
@@ -91,20 +57,33 @@ def X_set(path,transformation):
             sample_sensor =sensor_data_list[i][sensor]
             if transformation == 'fourier':
                 power_spectrum = fourier(sample_sensor)
+                #signal_props = signal_data(power_spectrum)
             elif transformation == 'psd':
                 power_spectrum = psd(sample_sensor)
+                #signal_props = signal_data(power_spectrum)
             elif transformation == 'pwelch':
                 power_spectrum = pwelch(sample_sensor)
+                #signal_props = signal_data(power_spectrum)
             elif transformation == 'wavelet':
                 power_spectrum = wavelet(sample_sensor)
+                #signal_props = signal_data(power_spectrum)
             elif transformation == 'none':
-                power_spectrum = fourier(sample_sensor)
+                power_spectrum = sample_sensor
+                #signal_props = signal_data(power_spectrum)
+            elif transformation == 'spectrogram':
+                power_spectrum = spectrogram(sample_sensor)
+                #signal_props = signal_data(power_spectrum)
             power_spectrum_list.append(power_spectrum)  
-
+            #signal_properties_list.append(signal_props)
 
     sensor2_vector = []
     sensor3_vector = []
     sensor4_vector = []
+
+
+    sensor2_signal_props =[]
+    sensor3_signal_props =[]
+    sensor4_signal_props =[]
 
     bound_1 = int(len(power_spectrum_list)/3)
     bound_2 = int(2*len(power_spectrum_list)/3)
@@ -113,15 +92,19 @@ def X_set(path,transformation):
 
     for i in range(0,bound_1):
         sensor2_vector.append(power_spectrum_list[i])
+        #sensor2_signal_props.append(signal_properties_list[i])
 
     for i in range(bound_1,bound_2):
         sensor3_vector.append(power_spectrum_list[i])
+        #sensor3_signal_props.append(signal_properties_list[i])
 
     for i in range(bound_2,bound_3):
         sensor4_vector.append(power_spectrum_list[i])
+        #sensor4_signal_props.append(signal_properties_list[i])
 
     X = np.concatenate((sensor2_vector,sensor3_vector,sensor4_vector),axis=1)
-    return X
+    #sig = np.concatenate((sensor2_signal_props,sensor3_signal_props,sensor4_signal_props),axis=1)
+    return X#,sig
 
 
 def y_set(path):

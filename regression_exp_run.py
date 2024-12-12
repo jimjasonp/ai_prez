@@ -8,7 +8,7 @@ from models import *
 from helper_functions import res_plot,model_run
 
 # transformations fourier,none,wavelet,psd,pwelch
-transformation = 'pwelch'
+transformation = 'wavelet'
 
 X_data = X_set(r'C:\Users\jimja\Desktop\thesis\data',transformation)
 y_data = y_set(r'C:\Users\jimja\Desktop\thesis\data')
@@ -20,8 +20,8 @@ y_random_data = y_set(r'C:\Users\jimja\Desktop\thesis\random_data')
 X_dokimes = X_set(r'C:\Users\jimja\Desktop\thesis\dokimes',transformation)
 
 
-#scaler = StandardScaler()
-scaler = MinMaxScaler()
+scaler = StandardScaler()
+#scaler = MinMaxScaler()
 X_random_data= scaler.fit_transform(X_random_data)
 X_data = scaler.transform(X_data)
 X_dokimes = scaler.transform(X_dokimes)
