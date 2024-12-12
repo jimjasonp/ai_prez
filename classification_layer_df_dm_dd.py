@@ -3,7 +3,20 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score,confusion_matrix
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
-from x_y_set_dm_df_dd import X,y
+#from x_y_set_dm_df_dd import X,y
+
+
+
+
+###############################################################
+from y_set_df_dm_dd import dm_df_dd_list
+from test_file_opener import X_set
+
+y = dm_df_dd_list
+transformation = 'pwelch'
+
+X = X_set(r'C:\Users\jimja\Desktop\thesis\Balanced_data',transformation)
+###############################################################
 
 
 

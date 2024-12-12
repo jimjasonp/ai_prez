@@ -76,7 +76,7 @@ gp = GaussianProcessClassifier(
 gp.fit(X_train,y_train)
 
 
-y_pred = svm.predict(X_test)
+y_pred = gp.predict(X_test)
 #print(y_pred)
 
 
