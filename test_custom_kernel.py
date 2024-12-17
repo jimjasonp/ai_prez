@@ -6,7 +6,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor,GaussianProcessCla
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score,confusion_matrix
-
+import matplotlib.pyplot as plt
 
 ############## Regression##############
 
@@ -34,20 +34,31 @@ from sklearn.metrics import accuracy_score,confusion_matrix
 
 from x_y_set_dm_df_dd import X,y
 
+
+from test_transformations import signal_props_extract
+from helper_functions import fourier,pwelch,wavelet
+
+feature_vector =[]
+for sample in X:
+    sample = fourier(sample)
+    feature_vector.append(signal_props_extract(sample))
+
+X = feature_vector
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,shuffle=True)
 scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
+#X_train = scaler.fit_transform(X_train)
+#X_test = scaler.transform(X_test)
 
 
 ########################################################
 
 
-
-sin_kernel = ExpSineSquared(length_scale=100, 
-                            periodicity=100, 
-                            length_scale_bounds=(10, 100.0), 
-                            periodicity_bounds=(10, 100.0)
+sin_kernel = ExpSineSquared(
+                            #length_scale=0.0000001, 
+                            #periodicity=100,                            
+                            #length_scale_bounds='fixed', 
+                            #periodicity_bounds=(10e-5,100)
                             )
 
 rbf = RBF(length_scale=100, 
@@ -61,22 +72,15 @@ svm = SVC(
     tol =1e-5 ,
     shrinking= True,
     max_iter=-1,
-    kernel=custom_kernel
+    kernel='linear'
     )
 svm.fit(X_train, y_train)
 
 
-
-
-gp = GaussianProcessClassifier(
-    kernel=custom_kernel,  
-    optimizer='fmin_l_bfgs_b', 
-    n_restarts_optimizer=0, 
-)
-gp.fit(X_train,y_train)
-
-
-y_pred = gp.predict(X_test)
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+y_pred = svm.predict(X_test)
 #print(y_pred)
 
 

@@ -74,7 +74,7 @@ def fourier(sample_sensor):
     #sample sensor is the value of s2 which is the 
     freqs = np.fft.fftfreq(sample_sensor.size,d=fs)
     power_spectrum = np.abs(fourier)
-    return power_spectrum
+    return power_spectrum,freqs
 
 
 def pwelch(sample_sensor):

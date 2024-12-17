@@ -8,7 +8,7 @@ from models import *
 from helper_functions import res_plot,model_run
 
 # transformations fourier,none,wavelet,psd,pwelch
-transformation = 'wavelet'
+transformation = 'pwelch'
 
 X_data = X_set(r'C:\Users\jimja\Desktop\thesis\data',transformation)
 y_data = y_set(r'C:\Users\jimja\Desktop\thesis\data')

@@ -107,8 +107,8 @@ for feature in feature_list:
         for i in range(0,len(sensor_data_list)):
             #efarmozo to metasxhmatismo fourier (fft) se kathe timeserie
             sample_sensor =sensor_data_list[i][sensor]
-            #power_spectrum = sample_sensor
-            power_spectrum = fourier(sample_sensor)
+            power_spectrum = sample_sensor
+            #power_spectrum = fourier(sample_sensor)
             power_spectrum_list.append(power_spectrum)
 
             # ta apotelesmata tou fft ta metatrepw se kapoio feature   

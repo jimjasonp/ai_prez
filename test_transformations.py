@@ -1,36 +1,66 @@
 import numpy as np
-from test_file_opener import y_set,X_set
+from test_file_opener import X_set,y_set
 import matplotlib.pyplot as plt
 from helper_functions import fourier
-X_train = np.concatenate((
-                        X_set(r'C:\Users\jimja\Desktop\thesis\random_data','none'),
-                        X_set(r'C:\Users\jimja\Desktop\thesis\data','none')),
-                        axis=0)
+from sklearn.preprocessing import StandardScaler
+
+set = X_set(r'C:\Users\jimja\Desktop\thesis\random_data','none')
 
 
-y = np.concatenate((
-                        y_set(r'C:\Users\jimja\Desktop\thesis\random_data'),
-                        y_set(r'C:\Users\jimja\Desktop\thesis\data')),
-                        axis=0)
 X_test = X_set(r'C:\Users\jimja\Desktop\thesis\dokimes','none')
-sample = fourier(X_train[0])
+################################################################
+def signal_props_extract(sample):
+    freq = sample[1]
+    amp = sample[0]
 
-#low_peaks, properties = signal.find_peaks(x,height=(0.005,0.008))
+    for i in range(0,len(freq)):
+        if freq[i] == 200:
+            first_bound = i
+        if freq[i] == 400:
+            second_bound = i
+        if freq[i] ==0:
+            zero_bound = i
+    
+    first_amp =[]
+    for i in range(zero_bound,first_bound):
+        first_amp.append(amp[i])
 
-#plt.plot(x)
-#plt.plot(peaks, x[peaks], "x")
-#plt.plot(np.zeros_like(x), "--", color="gray")
-#plt.show()
+    second_amp =[]
+    for i in range(first_bound,second_bound):
+        second_amp.append(amp[i])
+    
+    for i in range(zero_bound,first_bound):
+        if amp[i] == max(first_amp):
+            first_max_amp = amp[i]
+            first_max_freq = freq[i]
 
-#print('high prominences')
-#print(high_peaks_properties['prominences'][0])
-#print('high freqs')
-#print(high_peaks[0])
+    for i in range(first_bound,second_bound):
+        if amp[i] == max(second_amp):
+            second_max_amp = amp[i]
+            second_max_freq = freq[i]
 
-#print('low prominences')
-#print(low_peaks_properties['peak_heights'][0])
-#print('low freqs')
-#print(low_peaks[0])
+    dx = second_max_freq-first_max_freq
+    dy = first_max_amp-second_max_amp
+    props = first_max_freq,first_max_amp,second_max_freq,second_max_amp,dx,dy
+    
+    return props
+################################################################
+
+
+feature_vector =[]
+for sample in set:
+    sample = fourier(sample)
+    feature_vector.append(signal_props_extract(sample))
+
+X_test_new=[]
+for sample in X_test:
+    sample = fourier(sample)
+    X_test_new.append(signal_props_extract(sample))
+
+X_test = X_test_new
+X_train = feature_vector
+
+
 def signal_data(sample):
     from scipy import signal
     high_peaks, high_peaks_properties = signal.find_peaks(sample,prominence=0.08)
@@ -46,33 +76,12 @@ def signal_data(sample):
                     ]
     return signal_props
 
+y_train = y_set(r'C:\Users\jimja\Desktop\thesis\random_data')
 
+from models import *
 
-import numpy as np
-import matplotlib.pyplot as plt
-import pywt
+y_pred = linear_regression(X_train,y_train,X_test)
 
-# Generate a sample signal
-def wavelets(sample):
-    fs = 1000  # Sampling frequency
-    t = np.linspace(0, 1, fs, endpoint=False)  # Time vector
-    signal = sample
-
-    # Perform wavelet transform
-    wavelet_name = 'db1' # Daubechies wavelet, order 1
-    transformed_signal, _ = pywt.dwt(signal, wavelet_name)
-    return transformed_signal
-    # Plot the original signal
-    #plt.subplot(2, 1, 1)
-    #plt.plot(signal)
-    #plt.title('Original Signal')
-
-    # Plot the transformed signal
-    #plt.subplot(2, 1, 2)
-    #plt.plot(transformed_signal)
-    #plt.title('Transformed Signal')
-
-    #plt.tight_layout()
-    #plt.show()
-
-wavelets(sample)
+y_true = [0.02,0.034,0.062,0.086,0.12]
+from sklearn.metrics import mean_absolute_percentage_error
+mape=mean_absolute_percentage_error(y_pred,y_true)
