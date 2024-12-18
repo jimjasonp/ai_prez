@@ -2,17 +2,17 @@ import numpy as np
 from test_file_opener import X_set,y_set
 import matplotlib.pyplot as plt
 from helper_functions import fourier
-from sklearn.preprocessing import StandardScaler
+
 
 set = X_set(r'C:\Users\jimja\Desktop\thesis\random_data','none')
-
+print(set)
 
 X_test = X_set(r'C:\Users\jimja\Desktop\thesis\dokimes','none')
 ################################################################
 def signal_props_extract(sample):
     freq = sample[1]
     amp = sample[0]
-
+    
     for i in range(0,len(freq)):
         if freq[i] == 200:
             first_bound = i
@@ -52,13 +52,13 @@ for sample in set:
     sample = fourier(sample)
     feature_vector.append(signal_props_extract(sample))
 
+
 X_test_new=[]
 for sample in X_test:
     sample = fourier(sample)
     X_test_new.append(signal_props_extract(sample))
 
 X_test = X_test_new
-X_train = feature_vector
 
 
 def signal_data(sample):
@@ -78,10 +78,15 @@ def signal_data(sample):
 
 y_train = y_set(r'C:\Users\jimja\Desktop\thesis\random_data')
 
-from models import *
+from sklearn.linear_model import LinearRegression
 
-y_pred = linear_regression(X_train,y_train,X_test)
+lr = LinearRegression()
+
+lr.fit(feature_vector,y_train)
+
+y_pred = lr.predict(X_test)
 
 y_true = [0.02,0.034,0.062,0.086,0.12]
 from sklearn.metrics import mean_absolute_percentage_error
 mape=mean_absolute_percentage_error(y_pred,y_true)
+print(mape)

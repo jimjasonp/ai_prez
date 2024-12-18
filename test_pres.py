@@ -1,60 +1,40 @@
-from sklearn import svm
-from sklearn.inspection import DecisionBoundaryDisplay
+import numpy as np
+from test_file_opener import y_set,X_set
 import matplotlib.pyplot as plt
+from helper_functions import fourier,model_run
+from sklearn.preprocessing import StandardScaler
+
+from models import linear_regression
 
 
-from test_custom_kernel import X_train,y_train,sin_kernel,rbf,custom_kernel
-X = X_train
-y = y_train
 
-def plot_training_data_with_decision_boundary(
-    kernel, ax=None, long_title=True, support_vectors=True
-):
-    # Train the SVC
-    clf = svm.SVC(kernel=kernel).fit(X, y)
+X_train = X_set(r'C:\Users\jimja\Desktop\thesis\random_data','fourier')
+X_test = X_set(r'C:\Users\jimja\Desktop\thesis\dokimes','fourier')
 
-    # Settings for plotting
-    if ax is None:
-        _, ax = plt.subplots(figsize=(4, 3))
-    x_min, x_max, y_min, y_max = -3, 3, -3, 3
-    ax.set(xlim=(x_min, x_max), ylim=(y_min, y_max))
 
-    # Plot decision boundary and margins
-    common_params = {"estimator": clf, "X": X, "ax": ax}
-    DecisionBoundaryDisplay.from_estimator(
-        **common_params,
-        response_method="predict",
-        plot_method="pcolormesh",
-        alpha=0.3,
-    )
-    DecisionBoundaryDisplay.from_estimator(
-        **common_params,
-        response_method="decision_function",
-        plot_method="contour",
-        levels=[-1, 0, 1],
-        colors=["k", "k", "k"],
-        linestyles=["--", "-", "--"],
-    )
 
-    if support_vectors:
-        # Plot bigger circles around samples that serve as support vectors
-        ax.scatter(
-            clf.support_vectors_[:, 0],
-            clf.support_vectors_[:, 1],
-            s=150,
-            facecolors="none",
-            edgecolors="k",
-        )
 
-    # Plot samples by color and add legend
-    #ax.scatter(X[:, 0], X[:, 1], c=y, s=30, edgecolors="k")
-    #ax.legend(*scatter.legend_elements(), loc="upper right", title="Classes")
-    if long_title:
-        ax.set_title(f" Decision boundaries of {kernel} kernel in SVC")
-    else:
-        ax.set_title(kernel)
+#raw_train = X_set(r'C:\Users\jimja\Desktop\thesis\random_data','none')
+#raw_test = X_set(r'C:\Users\jimja\Desktop\thesis\dokimes','none')
 
-    if ax is None:
-        plt.show()
+#X_train =[]
+#for sample in raw_train:
+#    X_train.append(fourier(sample))
 
-plot_training_data_with_decision_boundary(sin_kernel)
+#X_test=[]
+#for sample in raw_test:
+#    X_test.append(fourier(sample))
+
+
+
+y_train = y_set(r'C:\Users\jimja\Desktop\thesis\random_data')
+
+scaler = StandardScaler()
+X_train= scaler.fit_transform(X_train)
+
+X_test = scaler.transform(X_test)
+
+model = linear_regression
+
+print(model_run(model,X_train,y_train,X_test)[1])
+
